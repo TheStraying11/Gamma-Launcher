@@ -1,1 +1,25 @@
- 
+#!/usr/bin/python3
+from PyQt5.QtWidgets import *
+app = QApplication(['Gamma Launcher'])
+folder_definition_window = QWidget()
+layout1 = QVBoxLayout()
+data_folder = QLineEdit()
+data_folder.setPlaceholderText('Enter path to your factorio data folder (where your mods go)')
+application_folder = QLineEdit()
+application_folder.setPlaceholderText("Enter path to your factorio application folder (where the 'bin' folder is)")
+submit_button = QPushButton('Submit')
+layout1.addWidget(data_folder)
+submit_button.clicked.connect(lambda: submit())
+layout1.addWidget(application_folder)
+layout1.addWidget(submit_button)
+folder_definition_window.setLayout(layout1)
+folder_definition_window.setGeometry(0,0,494,100)
+folder_definition_window.show()
+main_window = QWidget()
+layout2 = QVBoxLayout()
+layout2.addWidget(QLabel('test'))
+main_window.setLayout(layout2)
+def submit():
+	folder_definition_window.hide()
+	main_window.show()
+app.exec()
