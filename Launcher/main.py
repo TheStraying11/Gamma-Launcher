@@ -23,3 +23,4 @@ def submit():
 	folder_definition_window.hide()
 	main_window.show()
 app.exec()
+j
