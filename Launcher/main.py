@@ -1,26 +1,103 @@
 #!/usr/bin/python3
 from PyQt5.QtWidgets import *
+
+#path['system'][0] is default data folder
+#path['system'][1] is default application folder
+path = {
+    'Linux (Standalone)' : ['~/.Factorio','~/.Factorio'],
+    'Linux (Steam)' : ['~/.Factorio','~/.local/share/Steam/steamapps/common/Factorio'],
+    'MacOS (Standalone)' : ['~/Library/Application Support/factorio','/Applications/factorio.app/Contents'],
+    'MacOS (Steam)' : ['~/Library/Application Support/factorio','~/Library/Application Support/Steam/steamapps/common/Factorio/factorio.app/Contents'],
+    'Windows (Standalone)' : [r"%appdata%\\Factorio",r"C:\\Program Files\\Factorio"],
+    'windows (Steam)' : [r"%appdata%\\Factorio",r"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Factorio"]
+}
+
 app = QApplication(['Gamma Launcher'])
+
+system_definition_window = QWidget()
+
+layout_0 = QVBoxLayout()
+
+system_definition_input = QComboBox()
+system_definition_input.addItems(["Linux (Standalone)","Linux (Steam)", "MacOS (Standalone)","MacOS (Steam)", "Windows (Standalone)", "Windows (Steam)"])
+
+submit_button_0 = QPushButton('Submit')
+submit_button_0.clicked.connect(lambda: submit_0())
+
+layout_0.addWidget(system_definition_input)
+layout_0.addWidget(submit_button_0)
+
+system_definition_window.setLayout(layout_0)
+system_definition_window.setGeometry(0,0,250,0)
+system_definition_window.show()
+
 folder_definition_window = QWidget()
-layout1 = QVBoxLayout()
-data_folder = QLineEdit()
-data_folder.setPlaceholderText('Enter path to your factorio data folder (where your mods go)')
-application_folder = QLineEdit()
-application_folder.setPlaceholderText("Enter path to your factorio application folder (where the 'bin' folder is)")
-submit_button = QPushButton('Submit')
-layout1.addWidget(data_folder)
-submit_button.clicked.connect(lambda: submit())
-layout1.addWidget(application_folder)
-layout1.addWidget(submit_button)
-folder_definition_window.setLayout(layout1)
-folder_definition_window.setGeometry(0,0,494,100)
-folder_definition_window.show()
+
+layout_1 = QVBoxLayout()
+
+data_folder_label = QLabel('Enter path to your factorio data folder. (where your mods go)')
+
+data_folder_input = QLineEdit()
+data_folder_input.setPlaceholderText('Enter path to your factorio data folder. (where your mods go)')
+browse_data = QPushButton('Browse')
+browse_data.clicked.connect(lambda: browse_0())
+
+application_folder_label = QLabel("Enter path to your factorio application folder. (where the 'bin' folder is)")
+
+application_folder_input = QLineEdit()
+application_folder_input.setPlaceholderText("Enter path to your factorio application folder. (where the 'bin' folder is)")
+browse_application = QPushButton('Browse')
+browse_application.clicked.connect(lambda: browse_1())
+
+submit_button_1 = QPushButton('Submit')
+submit_button_1.clicked.connect(lambda: submit_1())
+
+default_continue_label = QLabel("If you don't know what this means, the defaults are probably fine.")
+
+data_group = QHBoxLayout()
+data_group.addWidget(data_folder_input)
+data_group.addWidget(browse_data)
+
+application_group = QHBoxLayout()
+application_group.addWidget(application_folder_input)
+application_group.addWidget(browse_application)
+
+layout_1.addWidget(data_folder_label)
+layout_1.addLayout(data_group)
+layout_1.addWidget(application_folder_label)
+layout_1.addLayout(application_group)
+layout_1.addWidget(default_continue_label)
+layout_1.addWidget(submit_button_1)
+
+folder_definition_window.setLayout(layout_1)
+folder_definition_window.setGeometry(0,0,494,0)
+
 main_window = QWidget()
-layout2 = QVBoxLayout()
-layout2.addWidget(QLabel('test'))
-main_window.setLayout(layout2)
-def submit():
+
+layout_2 = QVBoxLayout()
+
+layout_2.addWidget(QLabel('test'))
+
+main_window.setLayout(layout_2)
+
+def browse_0():
+	data_folder_input.setText(str(QFileDialog.getExistingDirectory()))
+
+def browse_1():
+	application_folder_input.setText(str(QFileDialog.getExistingDirectory()))
+
+def submit_0():
+	system_definition_window.hide()
+	data_folder_input.setText(path[system_definition_input.currentText()][0])
+	application_folder_input.setText(path[system_definition_input.currentText()][0])
+	folder_definition_window.show()
+
+def submit_1():
 	folder_definition_window.hide()
+	application_folder_path = application_folder_input.text()
+	data_folder_path = data_folder_input.text()
 	main_window.show()
+	print('data folder is '+data_folder_path)
+	print('application folder is '+application_folder_path)
+
 app.exec()
-j
