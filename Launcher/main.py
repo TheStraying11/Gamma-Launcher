@@ -8,8 +8,8 @@ path = {
     'Linux (Steam)' : ['~/.Factorio','~/.local/share/Steam/steamapps/common/Factorio'],
     'MacOS (Standalone)' : ['~/Library/Application Support/factorio','/Applications/factorio.app/Contents'],
     'MacOS (Steam)' : ['~/Library/Application Support/factorio','~/Library/Application Support/Steam/steamapps/common/Factorio/factorio.app/Contents'],
-    'Windows (Standalone)' : [r"%appdata%\\Factorio",r"C:\\Program Files\\Factorio"],
-    'windows (Steam)' : [r"%appdata%\\Factorio",r"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Factorio"]
+    'Windows (Standalone)' : [r"%appdata%\Factorio",r"C:\Program Files\Factorio"],
+    'Windows (Steam)' : [r"%appdata%\Factorio",r"C:\Program Files (x86)\Steam\steamapps\common\Factorio"]
 }
 
 app = QApplication(['Gamma Launcher'])
@@ -119,7 +119,7 @@ layout_3.addWidget(submit_button_2)
 
 
 add_window.setLayout(layout_3)
-add_window.setGeometry(0,0,0,0)
+add_window.setGeometry(0,0,550,0)
 
 def browse_0():
 	data_folder_input.setText(str(QFileDialog.getExistingDirectory()))
@@ -128,12 +128,12 @@ def browse_1():
 	application_folder_input.setText(str(QFileDialog.getExistingDirectory()))
 
 def browse_2():
-	modpack_json_input.setText(str(QFileDialog.getExistingDirectory()))
+	modpack_json_input.setText(QFileDialog.getOpenFileName()[0])
 
 def submit_0():
 	system_definition_window.hide()
 	data_folder_input.setText(path[system_definition_input.currentText()][0])
-	application_folder_input.setText(path[system_definition_input.currentText()][0])
+	application_folder_input.setText(path[system_definition_input.currentText()][1])
 	folder_definition_window.show()
 
 def submit_1():
@@ -145,13 +145,13 @@ def submit_1():
 	print('application folder is '+application_folder_path)
 
 def submit_2():
-	add_window.hide()
-
-def add_list():
-	add_window.show()
 	new_modpack_name = modpack_name_input
 	new_modpack_json = modpack_json_input
 	modpack_json_input.setText('')
 	modpack_name_input.setText('')
+	add_window.hide()
+
+def add_list():
+	add_window.show()
 
 app.exec()
