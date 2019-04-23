@@ -8,8 +8,8 @@ path = {
     'Linux (Steam)' : ['~/.Factorio','~/.local/share/Steam/steamapps/common/Factorio'],
     'MacOS (Standalone)' : ['~/Library/Application Support/factorio','/Applications/factorio.app/Contents'],
     'MacOS (Steam)' : ['~/Library/Application Support/factorio','~/Library/Application Support/Steam/steamapps/common/Factorio/factorio.app/Contents'],
-    'Windows (Standalone)' : [r"%appdata%\\Factorio",r"C:\\Program Files\\Factorio"],
-    'windows (Steam)' : [r"%appdata%\\Factorio",r"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Factorio"]
+    'Windows (Standalone)' : [r"%appdata%\Factorio",r"C:\Program Files\Factorio"],
+    'windows (Steam)' : [r"%appdata%\Factorio",r"C:\Program Files (x86)\Steam\steamapps\common\Factorio"]
 }
 
 app = QApplication(['Gamma Launcher'])
