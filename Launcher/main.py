@@ -74,17 +74,61 @@ folder_definition_window.setGeometry(0,0,494,0)
 
 main_window = QWidget()
 
-layout_2 = QVBoxLayout()
+layout_2 = QHBoxLayout()
 
-layout_2.addWidget(QLabel('test'))
+modpack_menu = QListWidget()
+add_button = QPushButton('Add from file')
+add_button.clicked.connect(lambda: add_list())
+
+list_vertical = QVBoxLayout()
+list_vertical.addWidget(modpack_menu)
+
+add_button_vertical = QVBoxLayout()
+add_button_vertical.addWidget(add_button)
+
+
+layout_2.addLayout(list_vertical)
+layout_2.addLayout(add_button_vertical)
 
 main_window.setLayout(layout_2)
+main_window.setGeometry(0,0,494,0)
+
+add_window = QWidget()
+
+modpack_name_label = QLabel('Enter the name of your modpack')
+modpack_json_label = QLabel('Enter the path to your modpack.json')
+modpack_name_input = QLineEdit()
+modpack_json_input = QLineEdit()
+browse_json = QPushButton('Browse')
+browse_json.clicked.connect(lambda: browse_2())
+submit_button_2 = QPushButton('Submit')
+submit_button_2.clicked.connect(lambda: submit_2())
+
+
+
+json_group = QHBoxLayout()
+json_group.addWidget(modpack_json_input)
+json_group.addWidget(browse_json)
+
+layout_3 = QVBoxLayout()
+layout_3.addWidget(modpack_name_label)
+layout_3.addWidget(modpack_name_input)
+layout_3.addWidget(modpack_json_label)
+layout_3.addLayout(json_group)
+layout_3.addWidget(submit_button_2)
+
+
+add_window.setLayout(layout_3)
+add_window.setGeometry(0,0,0,0)
 
 def browse_0():
 	data_folder_input.setText(str(QFileDialog.getExistingDirectory()))
 
 def browse_1():
 	application_folder_input.setText(str(QFileDialog.getExistingDirectory()))
+
+def browse_2():
+	modpack_json_input.setText(str(QFileDialog.getExistingDirectory()))
 
 def submit_0():
 	system_definition_window.hide()
@@ -99,5 +143,15 @@ def submit_1():
 	main_window.show()
 	print('data folder is '+data_folder_path)
 	print('application folder is '+application_folder_path)
+
+def submit_2():
+	add_window.hide()
+
+def add_list():
+	add_window.show()
+	new_modpack_name = modpack_name_input
+	new_modpack_json = modpack_json_input
+	modpack_json_input.setText('')
+	modpack_name_input.setText('')
 
 app.exec()
