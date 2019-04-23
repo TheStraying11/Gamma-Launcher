@@ -1,5 +1,11 @@
 #!/usr/bin/python3
 from PyQt5.QtWidgets import *
+import json
+
+global json_file
+with open('modpack_list.json') as json_file:
+	global modpack_list
+	modpack_list = json.load(json_file)
 
 #path['system'][0] is default data folder
 #path['system'][1] is default application folder
@@ -150,6 +156,16 @@ def submit_2():
 	modpack_json_input.setText('')
 	modpack_name_input.setText('')
 	add_window.hide()
+	global modpack_list
+	global json_file
+	modpack_list['modpacks'].append({new_modpack_name : new_modpack_json})
+	json_file.close()
+	with open('modpack_list.json', 'w') as outfile:
+		json.dump(modpack_list, outfile)
+	outfile.close()
+	with open('modpack_list.json') as json_file:
+		modpack_list = json.load(json_file)
+
 
 def add_list():
 	add_window.show()
