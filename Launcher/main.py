@@ -2,10 +2,17 @@
 from PyQt5.QtWidgets import *
 import json
 
+app = QApplication(['Gamma Launcher'])
+
 global json_file
+global modpack_list 
 with open('modpack_list.json') as json_file:
-	global modpack_list
 	modpack_list = json.load(json_file)
+
+modpack_menu = QListWidget()
+
+for i in enumerate(modpack_list['modpacks']):
+	modpack_menu.addItem(i[1][0]["name"])
 
 #path['system'][0] is default data folder
 #path['system'][1] is default application folder
@@ -17,8 +24,6 @@ path = {
     'Windows (Standalone)' : [r"%appdata%\Factorio",r"C:\Program Files\Factorio"],
     'Windows (Steam)' : [r"%appdata%\Factorio",r"C:\Program Files (x86)\Steam\steamapps\common\Factorio"]
 }
-
-app = QApplication(['Gamma Launcher'])
 
 system_definition_window = QWidget()
 
@@ -82,9 +87,10 @@ main_window = QWidget()
 
 layout_2 = QHBoxLayout()
 
-modpack_menu = QListWidget()
 add_button = QPushButton('Add from file')
 add_button.clicked.connect(lambda: add_list())
+
+modpack_menu.itemClicked.connect(lambda: list_click())
 
 list_vertical = QVBoxLayout()
 list_vertical.addWidget(modpack_menu)
@@ -127,6 +133,10 @@ layout_3.addWidget(submit_button_2)
 add_window.setLayout(layout_3)
 add_window.setGeometry(0,0,550,0)
 
+launch_window = QWidget()
+
+layout_4 = QVBoxLayout()
+
 def browse_0():
 	data_folder_input.setText(str(QFileDialog.getExistingDirectory()))
 
@@ -151,23 +161,31 @@ def submit_1():
 	print('application folder is '+application_folder_path)
 
 def submit_2():
-	new_modpack_name = modpack_name_input
-	new_modpack_json = modpack_json_input
+	new_modpack_name = modpack_name_input.text()
+	new_modpack_json = modpack_json_input.text()
 	modpack_json_input.setText('')
 	modpack_name_input.setText('')
 	add_window.hide()
 	global modpack_list
 	global json_file
-	modpack_list['modpacks'].append({new_modpack_name : new_modpack_json})
+	if ((new_modpack_name and new_modpack_json) != ''):
+		modpack_list['modpacks'].append({new_modpack_name, new_modpack_json})
 	json_file.close()
 	with open('modpack_list.json', 'w') as outfile:
 		json.dump(modpack_list, outfile)
 	outfile.close()
 	with open('modpack_list.json') as json_file:
 		modpack_list = json.load(json_file)
+	modpack_menu.clear()
+	for i in enumerate(modpack_list['modpacks']):
+		modpack_menu.addItem(i[1][0]["name"])
+
 
 
 def add_list():
 	add_window.show()
+
+def list_click():
+	launch_window.show()
 
 app.exec()
