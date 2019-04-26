@@ -1,1 +1,6 @@
-{"modpacks": [{"Test Pack": "~/Desktop/Test_Pack.json"}, {"Test Pack 2": "~/Desktop.Test_Pack_2.json"}, {
+{
+	"modpacks": [
+		{"Test Pack": "~/Desktop/Test_Pack.json"}, 
+		{"Test Pack 2": "~/Desktop.Test_Pack_2.json"}
+	]
+}
