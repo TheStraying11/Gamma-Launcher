@@ -169,10 +169,11 @@ def submit_2():
 	global modpack_list
 	global json_file
 	if ((new_modpack_name and new_modpack_json) != ''):
-		modpack_list['modpacks'].append({new_modpack_name, new_modpack_json})
+		modpack_list['modpacks'].append([{'name' : new_modpack_name}, {'json' : new_modpack_json}])
 	json_file.close()
 	with open('modpack_list.json', 'w') as outfile:
-		json.dump(modpack_list, outfile)
+		print(modpack_list)
+		json.dump(modpack_list, outfile, indent=4)
 	outfile.close()
 	with open('modpack_list.json') as json_file:
 		modpack_list = json.load(json_file)
