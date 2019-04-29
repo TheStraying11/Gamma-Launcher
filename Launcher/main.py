@@ -15,7 +15,7 @@ path = {
     'Windows (Steam)' : [r"%appdata%\Factorio",r"C:\Program Files (x86)\Steam\steamapps\common\Factorio"]
 }
 
-class init_json:
+class init_json: #division class for initialising modpack_list.json
 	with open('modpack_list.json') as json_file:
 		modpack_list = json.load(json_file)
 	json_file.close()
@@ -32,7 +32,7 @@ class init_json:
 
 class windows:
 
-	class system:
+	class system: #division class for the first window where system type is defined
 		system_definition_window = QWidget()
 
 		layout_0 = QVBoxLayout()
@@ -50,7 +50,7 @@ class windows:
 		system_definition_window.setGeometry(0,0,250,0)
 		system_definition_window.show()
 
-	class folder:
+	class folder: #division class for 2nd window where folder path is defined
 		folder_definition_window = QWidget()
 
 		layout_1 = QVBoxLayout()
@@ -92,7 +92,7 @@ class windows:
 		folder_definition_window.setLayout(layout_1)
 		folder_definition_window.setGeometry(0,0,494,0)
 
-	class main:
+	class main: #division class for main window with all modpacks listed
 		modpack_menu = init_json.modpack_menu
 
 		main_window = QWidget()
@@ -110,14 +110,13 @@ class windows:
 		add_button_vertical = QVBoxLayout()
 		add_button_vertical.addWidget(add_button)
 
-
 		layout_2.addLayout(list_vertical)
 		layout_2.addLayout(add_button_vertical)
 
 		main_window.setLayout(layout_2)
 		main_window.setGeometry(0,0,494,0)
 
-	class add:
+	class add: #division class for 'add modpack from file' window
 		add_window = QWidget()
 
 		modpack_name_label = QLabel('Enter the name of your modpack')
@@ -128,8 +127,6 @@ class windows:
 		browse_json.clicked.connect(lambda: functions.browse_2())
 		submit_button_2 = QPushButton('Submit')
 		submit_button_2.clicked.connect(lambda: functions.submit_2())
-
-
 
 		json_group = QHBoxLayout()
 		json_group.addWidget(modpack_json_input)
@@ -142,28 +139,27 @@ class windows:
 		layout_3.addLayout(json_group)
 		layout_3.addWidget(submit_button_2)
 
-
 		add_window.setLayout(layout_3)
 		add_window.setGeometry(0,0,550,0)
 
-	class launch:
+	class launch: #division class for the launch window
 		launch_window = QWidget()
 
 		layout_4 = QVBoxLayout()
 
 class functions:
-	def browse_0():
+	def browse_0(): #browse button for data folder text box
 		windows.folder.data_folder_input.setText(str(QFileDialog.getExistingDirectory()))
 
-	def browse_1():
+	def browse_1(): #browse button for application folder text box
 		windows.folder.application_folder_input.setText(str(QFileDialog.getExistingDirectory()))
 
-	def browse_2():
+	def browse_2(): #browse button for json file text box
 		windows.add.modpack_json_input.setText(QFileDialog.getOpenFileName()[0])
 
-	def submit_0():
+	def submit_0(): #submit button for system definition window
 		wf = windows.folder
-		
+
 		windows.system.system_definition_window.hide()
 
 		wf.data_folder_input.setText(path[windows.system.system_definition_input.currentText()][0])
@@ -171,7 +167,7 @@ class functions:
 
 		wf.folder_definition_window.show()
 
-	def submit_1():
+	def submit_1(): #submit button for folder definition window
 		wf = windows.folder
 		wf.folder_definition_window.hide()
 		wf.application_folder_path = windows.folder.application_folder_input.text()
@@ -181,7 +177,7 @@ class functions:
 		print('data folder is '+wf.data_folder_path)
 		print('application folder is '+wf.application_folder_path)
 
-	def submit_2():
+	def submit_2(): #submit button for 'add from file' window
 		wa = windows.add
 		modpack_list = init_json.modpack_list
 		json_file = init_json.json_file
@@ -215,10 +211,10 @@ class functions:
 		for i in enumerate(modpack_list['modpacks']):
 			modpack_menu.addItem(i[1][0]["name"])
 
-	def add_list():
+	def add_list(): #'add from file' button
 		windows.add.add_window.show()
 
-	def list_click():
+	def list_click(): #function triggered when clicking on a list item
 		windows.launch.launch_window.show()
 
 app.exec()
