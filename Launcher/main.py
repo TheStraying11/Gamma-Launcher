@@ -15,6 +15,10 @@ path = {
     'Windows (Steam)' : [r"%appdata%\Factorio",r"C:\Program Files (x86)\Steam\steamapps\common\Factorio"]
 }
 
+centerPoint = QDesktopWidget().availableGeometry().center()
+x = centerPoint.x()
+y = centerPoint.y()
+
 class init_json: #division class for initialising modpack_list.json
 	with open('modpack_list.json') as json_file:
 		modpack_list = json.load(json_file)
@@ -47,7 +51,7 @@ class windows:
 		layout_0.addWidget(submit_button_0)
 
 		system_definition_window.setLayout(layout_0)
-		system_definition_window.setGeometry(0,0,250,0)
+		system_definition_window.setGeometry(x-125,y-56,250,112)
 		system_definition_window.show()
 
 	class folder: #division class for 2nd window where folder path is defined
@@ -90,7 +94,7 @@ class windows:
 		layout_1.addWidget(submit_button_1)
 
 		folder_definition_window.setLayout(layout_1)
-		folder_definition_window.setGeometry(0,0,494,0)
+		folder_definition_window.setGeometry(x-247,y-116,494,232)
 
 	class main: #division class for main window with all modpacks listed
 		modpack_menu = init_json.modpack_menu
@@ -114,7 +118,7 @@ class windows:
 		layout_2.addLayout(add_button_vertical)
 
 		main_window.setLayout(layout_2)
-		main_window.setGeometry(0,0,494,0)
+		main_window.setGeometry(x-247,y-69,494,138)
 
 	class add: #division class for 'add modpack from file' window
 		add_window = QWidget()
@@ -140,7 +144,7 @@ class windows:
 		layout_3.addWidget(submit_button_2)
 
 		add_window.setLayout(layout_3)
-		add_window.setGeometry(0,0,550,0)
+		add_window.setGeometry(x-275,y-104,550,208)
 
 	class launch: #division class for the launch window
 		launch_window = QWidget()
