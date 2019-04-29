@@ -8,7 +8,13 @@ global json_file
 global modpack_list 
 with open('modpack_list.json') as json_file:
 	modpack_list = json.load(json_file)
-
+json_file.close()
+with open('modpack_list.json', 'w') as outfile:
+	modpack_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
+	json.dump(modpack_list, outfile, indent=4)
+outfile.close()
+with open('modpack_list.json') as json_file:
+	modpack_list = json.load(json_file)
 modpack_menu = QListWidget()
 
 for i in enumerate(modpack_list['modpacks']):
@@ -161,18 +167,21 @@ def submit_1():
 	print('application folder is '+application_folder_path)
 
 def submit_2():
-	new_modpack_name = modpack_name_input.text()
-	new_modpack_json = modpack_json_input.text()
+	latest_modpack_name = modpack_name_input.text()
+	latest_modpack_json = modpack_json_input.text()
 	modpack_json_input.setText('')
 	modpack_name_input.setText('')
 	add_window.hide()
 	global modpack_list
 	global json_file
-	if ((new_modpack_name and new_modpack_json) != ''):
-		modpack_list['modpacks'].append([{'name' : new_modpack_name}, {'json' : new_modpack_json}])
+	json_file.close()
+	with open('modpack_list.json') as json_file:
+		modpack_list = json.load(json_file)
+	if ((latest_modpack_name and latest_modpack_json) != ''):
+		modpack_list['modpacks'].append([{'name' : latest_modpack_name}, {'json' : latest_modpack_json}])
 	json_file.close()
 	with open('modpack_list.json', 'w') as outfile:
-		print(modpack_list)
+		modpack_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
 		json.dump(modpack_list, outfile, indent=4)
 	outfile.close()
 	with open('modpack_list.json') as json_file:
@@ -180,8 +189,6 @@ def submit_2():
 	modpack_menu.clear()
 	for i in enumerate(modpack_list['modpacks']):
 		modpack_menu.addItem(i[1][0]["name"])
-
-
 
 def add_list():
 	add_window.show()
