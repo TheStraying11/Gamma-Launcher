@@ -32,7 +32,7 @@ class init_json: #division class for initialising modpack_list.json
 	modpack_menu = QListWidget()
 
 	for i in enumerate(modpack_list['modpacks']):
-		modpack_menu.addItem(i[1][0]["name"])
+		modpack_menu.addItem(i[1][0]['name'])
 
 class windows:
 
