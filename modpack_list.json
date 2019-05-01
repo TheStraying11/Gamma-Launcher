@@ -1,0 +1,12 @@
+{
+    "modpacks":[
+        [
+            {
+                "name":"testpack"
+            },
+            {
+                "json":"modpacks/testpack.json"
+            }
+        ]
+    ]
+}
