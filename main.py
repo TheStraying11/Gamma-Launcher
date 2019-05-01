@@ -52,7 +52,16 @@ class windows:
 
 		system_definition_window.setLayout(layout_0)
 		system_definition_window.setGeometry(x-125,y-56,250,112)
-		system_definition_window.show()
+
+		with open('settings.json') as settings_json:
+			settings = json.load(settings_json)
+		settings_json.close()
+
+		if (settings["system"] != ''):
+			def main():
+				windows.main.main_window.show()
+		else:
+			system_definition_window.show()
 
 	class folder: #division class for 2nd window where folder path is defined
 		folder_definition_window = QWidget()
@@ -185,26 +194,42 @@ class functions:
 
 		wf.data_folder_input.setText(path[windows.system.system_definition_input.currentText()][0])
 		wf.application_folder_input.setText(path[windows.system.system_definition_input.currentText()][1])
-
-		wf.folder_definition_window.show()
-
-	def submit_folder(): #submit button for folder definition window
-		wf = windows.folder
-		wf.folder_definition_window.hide()
-		wf.application_folder_path = windows.folder.application_folder_input.text()
-		wf.data_folder_path = windows.folder.data_folder_input.text()
-
 		with open('settings.json') as settings_json:
 			settings = json.load(settings_json)
 		settings_json.close()
 
+		settings["system"] = windows.system.system_definition_input.currentText()
+		with open('settings.json', 'w') as outfile:
+			json.dump(settings, outfile, indent = 4)
+		outfile.close()
+
+		if ((settings["data_folder"] and settings["application_folder"]) != ''):
+			functions.submit_folder()
+		else:
+			wf.folder_definition_window.show()
+
+	def submit_folder(): #submit button for folder definition window
+		wf = windows.folder
+		wf.folder_definition_window.hide()
+		application_folder_path = wf.application_folder_input.text()
+		data_folder_path = wf.data_folder_input.text()
+
+		with open('settings.json') as settings_json:
+			settings = json.load(settings_json)
+
+		settings["data_folder"] = data_folder_path
+		settings["application_folder"] = application_folder_path
+		settings_json.close()
+		with open('settings.json', 'w') as outfile:
+			json.dump(settings, outfile, indent = 4)
+		outfile.close()
 		if (settings["username"] == ''):
 			windows.username.username_definition_window.show()
 		else:
 			windows.main.main_window.show()
 
-		print('data folder is '+wf.data_folder_path)
-		print('application folder is '+wf.application_folder_path)
+		print('data folder is '+data_folder_path)
+		print('application folder is '+application_folder_path)
 
 	def submit_add(): #submit button for 'add from file' window
 		wa = windows.add
@@ -266,5 +291,8 @@ class functions:
 
 	def list_click(): #function triggered when clicking on a list item
 		windows.launch.launch_window.show()
+
+if __name__ == '__main__':
+	windows.system.main()
 
 app.exec()
