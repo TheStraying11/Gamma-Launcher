@@ -286,7 +286,7 @@ class functions:
 		windows.main.main_window.show()
 
 
-	def add_list(): #add from file button
+	def add_list(): #'add from file' button
 		windows.add.add_window.show()
 
 	def list_click(): #function triggered when clicking on a list item
