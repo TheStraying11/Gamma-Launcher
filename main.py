@@ -19,19 +19,19 @@ centerPoint = QDesktopWidget().availableGeometry().center()
 x = centerPoint.x()
 y = centerPoint.y()
 
-class init_json: #division class for initialising modpack_list.json
-	with open('modpack_list.json') as json_file:
-		modpack_list = json.load(json_file)
+class init_json: #division class for initialising local_list.json
+	with open('local_list.json') as json_file:
+		local_list = json.load(json_file)
 	json_file.close()
-	with open('modpack_list.json', 'w') as outfile:
-		modpack_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
-		json.dump(modpack_list, outfile, indent=4)
+	with open('local_list.json', 'w') as outfile:
+		local_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
+		json.dump(local_list, outfile, indent=4)
 	outfile.close()
-	with open('modpack_list.json') as json_file:
-		modpack_list = json.load(json_file)
+	with open('local_list.json') as json_file:
+		local_list = json.load(json_file)
 	modpack_menu = QListWidget()
 
-	for i in enumerate(modpack_list['modpacks']):
+	for i in enumerate(local_list['modpacks']):
 		modpack_menu.addItem(i[1][0]["name"])
 
 class windows:
@@ -233,7 +233,7 @@ class functions:
 
 	def submit_add(): #submit button for 'add from file' window
 		wa = windows.add
-		modpack_list = init_json.modpack_list
+		local_list = init_json.local_list
 		json_file = init_json.json_file
 		modpack_menu = init_json.modpack_menu
 		
@@ -246,23 +246,23 @@ class functions:
 
 		json_file.close()
 
-		with open('modpack_list.json') as json_file:
-			modpack_list = json.load(json_file)
+		with open('local_list.json') as json_file:
+			local_list = json.load(json_file)
 		
 		if ((latest_modpack_name and latest_modpack_json) != ''):
-			modpack_list['modpacks'].append([{'name' : latest_modpack_name}, {'json' : latest_modpack_json}])
+			local_list['modpacks'].append([{'name' : latest_modpack_name}, {'json' : latest_modpack_json}])
 		json_file.close()
 		
-		with open('modpack_list.json', 'w') as outfile:
-			modpack_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
-			json.dump(modpack_list, outfile, indent=4)
+		with open('local_list.json', 'w') as outfile:
+			local_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
+			json.dump(local_list, outfile, indent=4)
 		outfile.close()
 		
-		with open('modpack_list.json') as json_file:
-			modpack_list = json.load(json_file)
+		with open('local_list.json') as json_file:
+			local_list = json.load(json_file)
 		modpack_menu.clear()
 		
-		for i in enumerate(modpack_list['modpacks']):
+		for i in enumerate(local_list['modpacks']):
 			modpack_menu.addItem(i[1][0]["name"])
 
 	def submit_username():
@@ -292,7 +292,12 @@ class functions:
 	def list_click(): #function triggered when clicking on a list item
 		windows.launch.launch_window.show()
 
-if __name__ == '__main__':
-	windows.system.main()
+with open('settings.json') as settings_json:
+	settings = json.load(settings_json)
+settings_json.close()
+
+if (settings["system"] != ''):
+	if __name__ == '__main__':
+		windows.system.main()
 
 app.exec()
