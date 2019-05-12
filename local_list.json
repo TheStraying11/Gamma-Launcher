@@ -2,10 +2,10 @@
     "modpacks":[
         [
             {
-                "name":"testpack"
+                "name": "testpack"
             },
             {
-                "json":"modpacks/testpack.json"
+                "json": "modpacks/testpack.json"
             }
         ]
     ]
