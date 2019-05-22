@@ -276,15 +276,19 @@ class functions:
 		else:
 			windows.main.main_window.show()
 
-		print('data folder is '+data_folder_path)
-		print('application folder is '+application_folder_path)
 
 	def submit_add(item): #submit button for 'add from internet' window
 		r = requests.get('http://gammalauncher.x10.mx/attachments/'+item.data(1), headers={"User-Agent": ""})
 		jsonfile = json.loads(r.text)
-		with open('modpacks/'+item.text()+'.json', 'w+') as outfile:
-			json.dump(jsonfile, outfile, indent = 4)
-		outfile.close()
+		try:
+			if (jsonfile["factorio version"] != '' and jsonfile["name"] != '' and jsonfile["mods"] != ''):
+				with open('modpacks/'+item.text()+'.json', 'w+') as outfile:
+					json.dump(jsonfile, outfile, indent = 4)
+				outfile.close()
+			else:
+				print('one or more parts of modpack.json are empty')
+		except:
+			print('invalid modpack.json')
 
 		global modpack_menu
 
@@ -319,7 +323,15 @@ class functions:
 
 		latest_modpack_json = wa.modpack_json_input.text()
 
-		copy(latest_modpack_json, 'modpacks')
+		with open(latest_modpack_json) as jsonfile:
+			jsonfile = json.load(jsonfile)
+		try:
+			if (jsonfile["factorio version"] != '' and jsonfile["name"] != '' and jsonfile["mods"] != ''):
+				copy(latest_modpack_json, 'modpacks')
+			else:
+				print('one or more parts of modpack.json are empty')
+		except:
+			print('invalid modpack json')
 
 		wa.modpack_json_input.setText('')
 		wa.addfile_window.hide()
@@ -354,8 +366,6 @@ class functions:
 		windows.username.username_definition_window.hide()
 
 		usr = windows.username.username_input.text()
-
-		print(usr)
 
 		with open('settings.json') as settings_json:
 			settings = json.load(settings_json)
