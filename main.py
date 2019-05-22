@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 from PyQt5.QtWidgets import *
+import requests
+import lxml.html
 import json
+import os
+from shutil import copy
 
 app = QApplication(['Gamma Launcher'])
 
@@ -18,21 +22,6 @@ path = {
 centerPoint = QDesktopWidget().availableGeometry().center()
 x = centerPoint.x()
 y = centerPoint.y()
-
-class init_json: #division class for initialising modpack_list.json
-	with open('modpack_list.json') as json_file:
-		modpack_list = json.load(json_file)
-	json_file.close()
-	with open('modpack_list.json', 'w') as outfile:
-		modpack_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
-		json.dump(modpack_list, outfile, indent=4)
-	outfile.close()
-	with open('modpack_list.json') as json_file:
-		modpack_list = json.load(json_file)
-	modpack_menu = QListWidget()
-
-	for i in enumerate(modpack_list['modpacks']):
-		modpack_menu.addItem(i[1][0]["name"])
 
 class windows:
 
@@ -59,7 +48,7 @@ class windows:
 
 		if (settings["system"] != ''):
 			def main():
-				windows.main.main_window.show()
+				functions.submit_system()
 		else:
 			system_definition_window.show()
 
@@ -123,21 +112,50 @@ class windows:
 		username_definition_window.setGeometry(x-125,y-56,250,112)
 
 	class main: #division class for main window with all modpacks listed
-		modpack_menu = init_json.modpack_menu
+		global modpack_menu
+		modpack_menu = QListWidget()
+
+		modpack_menu.clear()
+
+		filenames = []
+		data = []
+
+		os.chdir('modpacks')
+
+		for root, dirs, files in os.walk(".", topdown = False):
+		   for name in files:
+		    	with open(str(name)) as jsonfile:
+		    		jsondata = json.load(jsonfile)
+		    		jsondata = json.dumps(jsondata)
+		    	jsonfile.close()
+		    	filenames.append(name) 
+		    	data.append(jsondata) 
+
+		os.chdir('..')
+
+		for i in range(len(filenames)):
+			listitem = QListWidgetItem()
+			listitem.setText(filenames[i])
+			listitem.setData(1, data[i])
+			modpack_menu.addItem(listitem)
 
 		main_window = QWidget()
 
 		layout_3 = QHBoxLayout()
 
-		add_button = QPushButton('Add from file')
+		addfile_button = QPushButton('Add from File')
+		addfile_button.clicked.connect(lambda: functions.addfile_list())
+
+		add_button = QPushButton('Add from Internet')
 		add_button.clicked.connect(lambda: functions.add_list())
 
-		modpack_menu.itemClicked.connect(lambda: functions.list_click())
+		modpack_menu.itemDoubleClicked.connect(lambda: functions.list_click())
 
 		list_vertical = QVBoxLayout()
 		list_vertical.addWidget(modpack_menu)
 
 		add_button_vertical = QVBoxLayout()
+		add_button_vertical.addWidget(addfile_button)
 		add_button_vertical.addWidget(add_button)
 
 		layout_3.addLayout(list_vertical)
@@ -146,36 +164,66 @@ class windows:
 		main_window.setLayout(layout_3)
 		main_window.setGeometry(x-247,y-69,494,138)
 
-	class add: #division class for 'add modpack from file' window
-		add_window = QWidget()
 
-		modpack_name_label = QLabel('Enter the name of your modpack')
+	class addfile: #division class for 'add modpack from file' window
+		addfile_window = QWidget()
+
 		modpack_json_label = QLabel('Enter the path to your modpack.json')
-		modpack_name_input = QLineEdit()
 		modpack_json_input = QLineEdit()
 		browse_json = QPushButton('Browse')
 		browse_json.clicked.connect(lambda: functions.browse_2())
-		submit_add_button = QPushButton('Submit')
-		submit_add_button.clicked.connect(lambda: functions.submit_add())
+		submit_addfile_button = QPushButton('Submit')
+		submit_addfile_button.clicked.connect(lambda: functions.submit_addfile())
 
 		json_group = QHBoxLayout()
 		json_group.addWidget(modpack_json_input)
 		json_group.addWidget(browse_json)
 
 		layout_4 = QVBoxLayout()
-		layout_4.addWidget(modpack_name_label)
-		layout_4.addWidget(modpack_name_input)
 		layout_4.addWidget(modpack_json_label)
 		layout_4.addLayout(json_group)
-		layout_4.addWidget(submit_add_button)
+		layout_4.addWidget(submit_addfile_button)
 
-		add_window.setLayout(layout_4)
-		add_window.setGeometry(x-275,y-104,550,208)
+		addfile_window.setLayout(layout_4)
+		addfile_window.setGeometry(x-275,y-70,550,140)
 
 	class launch: #division class for the launch window
 		launch_window = QWidget()
 
 		layout_5 = QVBoxLayout()
+
+	class add: #division class for 'add modpack from internet' window
+		add_window = QWidget()
+
+		json_menu = QListWidget()
+
+		r = requests.get('http://gammalauncher.x10.mx/attachments/', headers={"User-Agent": ""})
+		r = requests.get('http://gammalauncher.x10.mx/attachments/', headers={"User-Agent": ""}) 
+		#without the second request the program doesn't load changes on the webpage until ran a second time, this line ensures that the request is up to date
+
+		doc = lxml.html.fromstring(r.text)
+
+		filenames = doc.xpath('//li/a/@href')
+		filenames.remove("/")
+
+		for i in filenames:
+			r2 = requests.get('http://gammalauncher.x10.mx/attachments/'+i, headers={"User-Agent": ""})
+			r2 = requests.get('http://gammalauncher.x10.mx/attachments/'+i, headers={"User-Agent": ""})
+			jsonfile = json.loads(r2.text)
+			listitem = QListWidgetItem()
+			listitem.setText(jsonfile["name"])
+			listitem.setData(1, i)
+			json_menu.addItem(listitem)
+
+		submit_add_button = QPushButton('Submit')
+		submit_add_button.clicked.connect(lambda: functions.submit_add(windows.add.json_menu.currentItem()))
+
+		layout_6 = QHBoxLayout()
+		layout_6.addWidget(json_menu)
+		layout_6.addWidget(submit_add_button)
+
+		add_window.setLayout(layout_6)
+		add_window.setGeometry(x-275,y-104,550,208)
 
 class functions:
 	def browse_0(): #browse button for data folder text box
@@ -185,7 +233,7 @@ class functions:
 		windows.folder.application_folder_input.setText(str(QFileDialog.getExistingDirectory()))
 
 	def browse_2(): #browse button for json file text box
-		windows.add.modpack_json_input.setText(QFileDialog.getOpenFileName()[0])
+		windows.addfile.modpack_json_input.setText(QFileDialog.getOpenFileName()[0])
 
 	def submit_system(): #submit button for system definition window
 		wf = windows.folder
@@ -231,39 +279,76 @@ class functions:
 		print('data folder is '+data_folder_path)
 		print('application folder is '+application_folder_path)
 
-	def submit_add(): #submit button for 'add from file' window
-		wa = windows.add
-		modpack_list = init_json.modpack_list
-		json_file = init_json.json_file
-		modpack_menu = init_json.modpack_menu
-		
-		latest_modpack_name = wa.modpack_name_input.text()
-		latest_modpack_json = wa.modpack_json_input.text()
-		
-		wa.modpack_json_input.setText('')
-		wa.modpack_name_input.setText('')
-		wa.add_window.hide()
-
-		json_file.close()
-
-		with open('modpack_list.json') as json_file:
-			modpack_list = json.load(json_file)
-		
-		if ((latest_modpack_name and latest_modpack_json) != ''):
-			modpack_list['modpacks'].append([{'name' : latest_modpack_name}, {'json' : latest_modpack_json}])
-		json_file.close()
-		
-		with open('modpack_list.json', 'w') as outfile:
-			modpack_list['modpacks'].sort(key=lambda x: x[0]["name"].lower())
-			json.dump(modpack_list, outfile, indent=4)
+	def submit_add(item): #submit button for 'add from internet' window
+		r = requests.get('http://gammalauncher.x10.mx/attachments/'+item.data(1), headers={"User-Agent": ""})
+		jsonfile = json.loads(r.text)
+		with open('modpacks/'+item.text()+'.json', 'w+') as outfile:
+			json.dump(jsonfile, outfile, indent = 4)
 		outfile.close()
-		
-		with open('modpack_list.json') as json_file:
-			modpack_list = json.load(json_file)
+
+		global modpack_menu
+
 		modpack_menu.clear()
-		
-		for i in enumerate(modpack_list['modpacks']):
-			modpack_menu.addItem(i[1][0]["name"])
+
+		filenames = []
+		data = []
+
+		os.chdir('modpacks')
+
+		for root, dirs, files in os.walk(".", topdown = False):
+		   for name in files:
+		    	with open(str(name)) as jsonfile:
+		    		jsondata = json.load(jsonfile)
+		    		jsondata = json.dumps(jsondata)
+		    	jsonfile.close()
+		    	filenames.append(name) 
+		    	data.append(jsondata) 
+
+		os.chdir('..')
+
+		for i in range(len(filenames)):
+			listitem = QListWidgetItem()
+			listitem.setText(filenames[i])
+			listitem.setData(1, data[i])
+			modpack_menu.addItem(listitem)
+
+		windows.add.add_window.hide()
+
+	def submit_addfile(): #submit button for 'add from file' window
+		wa = windows.addfile
+
+		latest_modpack_json = wa.modpack_json_input.text()
+
+		copy(latest_modpack_json, 'modpacks')
+
+		wa.modpack_json_input.setText('')
+		wa.addfile_window.hide()
+
+		global modpack_menu
+
+		modpack_menu.clear()
+
+		filenames = []
+		data = []
+
+		os.chdir('modpacks')
+
+		for root, dirs, files in os.walk(".", topdown = False):
+		   for name in files:
+		    	with open(str(name)) as jsonfile:
+		    		jsondata = json.load(jsonfile)
+		    		jsondata = json.dumps(jsondata)
+		    	jsonfile.close()
+		    	filenames.append(name) 
+		    	data.append(jsondata) 
+
+		os.chdir('..')
+
+		for i in range(len(filenames)):
+			listitem = QListWidgetItem()
+			listitem.setText(filenames[i])
+			listitem.setData(1, data[i])
+			modpack_menu.addItem(listitem)
 
 	def submit_username():
 		windows.username.username_definition_window.hide()
@@ -286,13 +371,21 @@ class functions:
 		windows.main.main_window.show()
 
 
-	def add_list(): #'add from file' button
+	def addfile_list(): #'add from file' button
+		windows.addfile.addfile_window.show()
+
+	def add_list(): #'add from internet' button
 		windows.add.add_window.show()
 
 	def list_click(): #function triggered when clicking on a list item
 		windows.launch.launch_window.show()
 
-if __name__ == '__main__':
-	windows.system.main()
+with open('settings.json') as settings_json:
+	settings = json.load(settings_json)
+settings_json.close()
+
+if (settings["system"] != ''):
+	if __name__ == '__main__':
+		windows.system.main()
 
 app.exec()
