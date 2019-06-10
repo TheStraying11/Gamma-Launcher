@@ -24,7 +24,7 @@ x = centerPoint.x()
 y = centerPoint.y()
 
 class windows:
-
+	
 	class system: #division class for the first window where system type is defined
 		system_definition_window = QWidget()
 
@@ -119,24 +119,18 @@ class windows:
 
 		filenames = []
 		data = []
-		skipped = []
 
-		os.chdir('modpacks')
+		path = 'modpacks'
 
-		for root, dirs, files in os.walk(".", topdown = False):
-			for name in files:
-				if (root == '.'):
-					with open(str(name)) as jsonfile:
-						jsondata = json.load(jsonfile)
-						jsondata = json.dumps(jsondata)
-					jsonfile.close()
-					filenames.append(name) 
-					data.append(jsondata)
-				else:
-					if not root in skipped:
-						print('skipping',root,' because it is a directory not a modpack json')
-					skipped.append(root)	
-		os.chdir('..')
+		for name in os.listdir(path):
+			if not name.endswith('.json'):
+				print('skipping',name,'- not json file')
+				continue
+			with open(os.path.join(path, name)) as jsonfile:
+				jsondata = json.load(jsonfile)
+				jsondata = json.dumps(jsondata)
+			filenames.append(name) 
+			data.append(jsondata)
 
 		for i in range(len(filenames)):
 			listitem = QListWidgetItem()
@@ -302,22 +296,17 @@ class functions:
 		filenames = []
 		data = []
 
-		os.chdir('modpacks')
+		path = 'modpacks'
 
-		for root, dirs, files in os.walk(".", topdown = False):
-			for name in files:
-				if (root == '.'):
-					with open(str(name)) as jsonfile:
-						jsondata = json.load(jsonfile)
-						jsondata = json.dumps(jsondata)
-					jsonfile.close()
-					filenames.append(name) 
-					data.append(jsondata)
-				else:
-					if not root in skipped:
-						print('skipping',root,' because it is a directory not a modpack json')
-					skipped.append(root)	
-		os.chdir('..')
+		for name in os.listdir(path):
+			if not name.endswith('.json'):
+				print('skipping',name,'- not json file')
+				continue
+			with open(os.path.join(path, name)) as jsonfile:
+				jsondata = json.load(jsonfile)
+				jsondata = json.dumps(jsondata)
+			filenames.append(name) 
+			data.append(jsondata)
 
 		for i in range(len(filenames)):
 			listitem = QListWidgetItem()
@@ -352,22 +341,17 @@ class functions:
 		filenames = []
 		data = []
 
-		os.chdir('modpacks')
+		path = 'modpacks'
 
-		for root, dirs, files in os.walk(".", topdown = False):
-			for name in files:
-				if (root == '.'):
-					with open(str(name)) as jsonfile:
-						jsondata = json.load(jsonfile)
-						jsondata = json.dumps(jsondata)
-					jsonfile.close()
-					filenames.append(name) 
-					data.append(jsondata)
-				else:
-					if not root in skipped:
-						print('skipping',root,' because it is a directory not a modpack json')
-					skipped.append(root)	
-		os.chdir('..')
+		for name in os.listdir(path):
+			if not name.endswith('.json'):
+				print('skipping',name,'- not json file')
+				continue
+			with open(os.path.join(path, name)) as jsonfile:
+				jsondata = json.load(jsonfile)
+				jsondata = json.dumps(jsondata)
+			filenames.append(name) 
+			data.append(jsondata)
 
 		for i in range(len(filenames)):
 			listitem = QListWidgetItem()
