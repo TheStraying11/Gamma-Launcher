@@ -24,7 +24,7 @@ x = centerPoint.x()
 y = centerPoint.y()
 
 class windows:
-	
+
 	class system: #division class for the first window where system type is defined
 		system_definition_window = QWidget()
 
@@ -117,24 +117,27 @@ class windows:
 
 		modpack_menu.clear()
 
-		filenames = []
+		names = []
 		data = []
 
 		path = 'modpacks'
 
 		for name in os.listdir(path):
 			if not name.endswith('.json'):
-				print('skipping',name,'- not json file')
 				continue
 			with open(os.path.join(path, name)) as jsonfile:
 				jsondata = json.load(jsonfile)
 				jsondata = json.dumps(jsondata)
-			filenames.append(name) 
+			names.append(name) 
 			data.append(jsondata)
 
-		for i in range(len(filenames)):
+		for name in next(os.walk(path))[1]:
+			names.append(name)
+			data.append(os.path.join(path, name))
+
+		for i in range(len(names)):
 			listitem = QListWidgetItem()
-			listitem.setText(filenames[i])
+			listitem.setText(names[i])
 			listitem.setData(1, data[i])
 			modpack_menu.addItem(listitem)
 
@@ -293,24 +296,27 @@ class functions:
 
 		modpack_menu.clear()
 
-		filenames = []
+		names = []
 		data = []
 
 		path = 'modpacks'
 
 		for name in os.listdir(path):
 			if not name.endswith('.json'):
-				print('skipping',name,'- not json file')
 				continue
 			with open(os.path.join(path, name)) as jsonfile:
 				jsondata = json.load(jsonfile)
 				jsondata = json.dumps(jsondata)
-			filenames.append(name) 
+			names.append(name) 
 			data.append(jsondata)
 
-		for i in range(len(filenames)):
+		for name in next(os.walk(path))[1]:
+			names.append(name)
+			data.append(os.path.join(path, name))
+
+		for i in range(len(names)):
 			listitem = QListWidgetItem()
-			listitem.setText(filenames[i])
+			listitem.setText(names[i])
 			listitem.setData(1, data[i])
 			modpack_menu.addItem(listitem)
 
@@ -338,24 +344,27 @@ class functions:
 
 		modpack_menu.clear()
 
-		filenames = []
+		names = []
 		data = []
 
 		path = 'modpacks'
 
 		for name in os.listdir(path):
 			if not name.endswith('.json'):
-				print('skipping',name,'- not json file')
 				continue
 			with open(os.path.join(path, name)) as jsonfile:
 				jsondata = json.load(jsonfile)
 				jsondata = json.dumps(jsondata)
-			filenames.append(name) 
+			names.append(name) 
 			data.append(jsondata)
 
-		for i in range(len(filenames)):
+		for name in next(os.walk(path))[1]:
+			names.append(name)
+			data.append(os.path.join(path, name))
+
+		for i in range(len(names)):
 			listitem = QListWidgetItem()
-			listitem.setText(filenames[i])
+			listitem.setText(names[i])
 			listitem.setData(1, data[i])
 			modpack_menu.addItem(listitem)
 
