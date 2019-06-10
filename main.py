@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
 import requests
 import lxml.html
 import json
@@ -115,7 +116,15 @@ class windows:
 		global modpack_menu
 		modpack_menu = QListWidget()
 
+		global seperators
+		seperators = ["Installed","Not-Installed"]
+
 		modpack_menu.clear()
+		for name in seperators:
+			seperator_item = QListWidgetItem(name)
+			seperator_item.setFlags(Qt.NoItemFlags)
+			seperator_item.setTextAlignment(Qt.AlignHCenter)
+			modpack_menu.addItem(seperator_item)
 
 		names = []
 		data = []
@@ -128,7 +137,7 @@ class windows:
 			with open(os.path.join(path, name)) as jsonfile:
 				jsondata = json.load(jsonfile)
 				jsondata = json.dumps(jsondata)
-			names.append(name) 
+			names.append(name)
 			data.append(jsondata)
 
 		for name in next(os.walk(path))[1]:
@@ -136,10 +145,21 @@ class windows:
 			data.append(os.path.join(path, name))
 
 		for i in range(len(names)):
-			listitem = QListWidgetItem()
-			listitem.setText(names[i])
-			listitem.setData(1, data[i])
-			modpack_menu.addItem(listitem)
+			if names[i].endswith('.json'):
+				row = modpack_menu.row(modpack_menu.findItems(seperators[1], Qt.MatchExactly)[0])
+
+				listitem = QListWidgetItem()
+				listitem.setText(names[i])
+				listitem.setData(1, data[i])
+				modpack_menu.insertItem(row+1, listitem)
+			else:
+				row = modpack_menu.row(modpack_menu.findItems(seperators[0], Qt.MatchExactly)[0])
+
+				listitem = QListWidgetItem()
+				listitem.setText(names[i])
+				listitem.setData(1, data[i])
+				listitem.setTextAlignment(Qt.AlignLeft)
+				modpack_menu.insertItem(row+1, listitem)
 
 		main_window = QWidget()
 
@@ -150,7 +170,6 @@ class windows:
 
 		add_button = QPushButton('Add from Internet')
 		add_button.clicked.connect(lambda: functions.add_list())
-
 		modpack_menu.itemDoubleClicked.connect(lambda: functions.list_click())
 
 		list_vertical = QVBoxLayout()
@@ -164,7 +183,7 @@ class windows:
 		layout_3.addLayout(add_button_vertical)
 
 		main_window.setLayout(layout_3)
-		main_window.setGeometry(x-247,y-69,494,138)
+		main_window.setGeometry(x-244,y-69,488,138)
 
 
 	class addfile: #division class for 'add modpack from file' window
@@ -294,7 +313,14 @@ class functions:
 
 		global modpack_menu
 
+		global seperators
+
 		modpack_menu.clear()
+		for name in seperators:
+			seperator_item = QListWidgetItem(name)
+			seperator_item.setFlags(Qt.NoItemFlags)
+			seperator_item.setTextAlignment(Qt.AlignHCenter)
+			modpack_menu.addItem(seperator_item)
 
 		names = []
 		data = []
@@ -307,7 +333,7 @@ class functions:
 			with open(os.path.join(path, name)) as jsonfile:
 				jsondata = json.load(jsonfile)
 				jsondata = json.dumps(jsondata)
-			names.append(name) 
+			names.append(name)
 			data.append(jsondata)
 
 		for name in next(os.walk(path))[1]:
@@ -315,11 +341,21 @@ class functions:
 			data.append(os.path.join(path, name))
 
 		for i in range(len(names)):
-			listitem = QListWidgetItem()
-			listitem.setText(names[i])
-			listitem.setData(1, data[i])
-			modpack_menu.addItem(listitem)
+			if names[i].endswith('.json'):
+				row = modpack_menu.row(modpack_menu.findItems(seperators[1], Qt.MatchExactly)[0])
 
+				listitem = QListWidgetItem()
+				listitem.setText(names[i])
+				listitem.setData(1, data[i])
+				modpack_menu.insertItem(row+1, listitem)
+			else:
+				row = modpack_menu.row(modpack_menu.findItems(seperators[0], Qt.MatchExactly)[0])
+
+				listitem = QListWidgetItem()
+				listitem.setText(names[i])
+				listitem.setData(1, data[i])
+				listitem.setTextAlignment(Qt.AlignLeft)
+				modpack_menu.insertItem(row+1, listitem)
 		windows.add.add_window.hide()
 
 	def submit_addfile(): #submit button for 'add from file' window
@@ -342,7 +378,14 @@ class functions:
 
 		global modpack_menu
 
+		global seperators
+
 		modpack_menu.clear()
+		for name in seperators:
+			seperator_item = QListWidgetItem(name)
+			seperator_item.setFlags(Qt.NoItemFlags)
+			seperator_item.setTextAlignment(Qt.AlignHCenter)
+			modpack_menu.addItem(seperator_item)
 
 		names = []
 		data = []
@@ -355,7 +398,7 @@ class functions:
 			with open(os.path.join(path, name)) as jsonfile:
 				jsondata = json.load(jsonfile)
 				jsondata = json.dumps(jsondata)
-			names.append(name) 
+			names.append(name)
 			data.append(jsondata)
 
 		for name in next(os.walk(path))[1]:
@@ -363,10 +406,21 @@ class functions:
 			data.append(os.path.join(path, name))
 
 		for i in range(len(names)):
-			listitem = QListWidgetItem()
-			listitem.setText(names[i])
-			listitem.setData(1, data[i])
-			modpack_menu.addItem(listitem)
+			if names[i].endswith('.json'):
+				row = modpack_menu.row(modpack_menu.findItems(seperators[1], Qt.MatchExactly)[0])
+
+				listitem = QListWidgetItem()
+				listitem.setText(names[i])
+				listitem.setData(1, data[i])
+				modpack_menu.insertItem(row+1, listitem)
+			else:
+				row = modpack_menu.row(modpack_menu.findItems(seperators[0], Qt.MatchExactly)[0])
+
+				listitem = QListWidgetItem()
+				listitem.setText(names[i])
+				listitem.setData(1, data[i])
+				listitem.setTextAlignment(Qt.AlignLeft)
+				modpack_menu.insertItem(row+1, listitem)
 
 	def submit_username():
 		windows.username.username_definition_window.hide()
