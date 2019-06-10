@@ -119,18 +119,23 @@ class windows:
 
 		filenames = []
 		data = []
+		skipped = []
 
 		os.chdir('modpacks')
 
 		for root, dirs, files in os.walk(".", topdown = False):
-		   for name in files:
-		    	with open(str(name)) as jsonfile:
-		    		jsondata = json.load(jsonfile)
-		    		jsondata = json.dumps(jsondata)
-		    	jsonfile.close()
-		    	filenames.append(name) 
-		    	data.append(jsondata) 
-
+			for name in files:
+				if (root == '.'):
+					with open(str(name)) as jsonfile:
+						jsondata = json.load(jsonfile)
+						jsondata = json.dumps(jsondata)
+					jsonfile.close()
+					filenames.append(name) 
+					data.append(jsondata)
+				else:
+					if not root in skipped:
+						print('skipping',root,' because it is a directory not a modpack json')
+					skipped.append(root)	
 		os.chdir('..')
 
 		for i in range(len(filenames)):
@@ -300,14 +305,18 @@ class functions:
 		os.chdir('modpacks')
 
 		for root, dirs, files in os.walk(".", topdown = False):
-		   for name in files:
-		    	with open(str(name)) as jsonfile:
-		    		jsondata = json.load(jsonfile)
-		    		jsondata = json.dumps(jsondata)
-		    	jsonfile.close()
-		    	filenames.append(name) 
-		    	data.append(jsondata) 
-
+			for name in files:
+				if (root == '.'):
+					with open(str(name)) as jsonfile:
+						jsondata = json.load(jsonfile)
+						jsondata = json.dumps(jsondata)
+					jsonfile.close()
+					filenames.append(name) 
+					data.append(jsondata)
+				else:
+					if not root in skipped:
+						print('skipping',root,' because it is a directory not a modpack json')
+					skipped.append(root)	
 		os.chdir('..')
 
 		for i in range(len(filenames)):
@@ -346,14 +355,18 @@ class functions:
 		os.chdir('modpacks')
 
 		for root, dirs, files in os.walk(".", topdown = False):
-		   for name in files:
-		    	with open(str(name)) as jsonfile:
-		    		jsondata = json.load(jsonfile)
-		    		jsondata = json.dumps(jsondata)
-		    	jsonfile.close()
-		    	filenames.append(name) 
-		    	data.append(jsondata) 
-
+			for name in files:
+				if (root == '.'):
+					with open(str(name)) as jsonfile:
+						jsondata = json.load(jsonfile)
+						jsondata = json.dumps(jsondata)
+					jsonfile.close()
+					filenames.append(name) 
+					data.append(jsondata)
+				else:
+					if not root in skipped:
+						print('skipping',root,' because it is a directory not a modpack json')
+					skipped.append(root)	
 		os.chdir('..')
 
 		for i in range(len(filenames)):
